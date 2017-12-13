@@ -114,7 +114,7 @@ class Http2ConnectionState : public Continuation
 public:
   Http2ConnectionState() : stream_list() { SET_HANDLER(&Http2ConnectionState::main_event_handler); }
 
-  Http2ClientSession *ua_session   = nullptr;
+  Http2ClientSession *ua_transaction   = nullptr;
   HpackHandle *local_hpack_handle  = nullptr;
   HpackHandle *remote_hpack_handle = nullptr;
   DependencyTree *dependency_tree  = nullptr;
@@ -147,7 +147,7 @@ public:
     ats_free(continued_buffer.iov_base);
 
     delete dependency_tree;
-    this->ua_session = nullptr;
+    this->ua_transaction = nullptr;
   }
 
   // Event handlers
@@ -231,7 +231,7 @@ public:
   bool
   is_state_closed() const
   {
-    return ua_session == nullptr || fini_received;
+    return ua_transaction == nullptr || fini_received;
   }
 
   bool
